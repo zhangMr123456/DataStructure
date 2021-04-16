@@ -1,0 +1,2 @@
+class AddError(IndexError):
+    pass
