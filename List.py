@@ -58,6 +58,14 @@ class SinglyLinkedList:
                 self.__init__()
             return val
 
+    def get_iter(self):
+        _current_next = self._current_next
+        while _current_next.next:
+            yield _current_next.val
+            _current_next = _current_next.next
+        yield _current_next.val
+
+
     def __next__(self):
         """链表迭代器先入先出, 可重复迭代"""
         current_next = self._current_next
@@ -73,11 +81,10 @@ class SinglyLinkedList:
     def __str__(self):
         current = self._first_obj
         node_list = []
-        while True:
+        while current.next:
             node_list.append(current.val)
-            if not current.next:
-                break
             current = current.next
+        node_list.append(current.val)
         return f"<SinglyLinkedList {node_list}>"
 
 
@@ -173,12 +180,10 @@ class DoubleLinkedList:
 
     def get_iter(self):
         _current_next = self._current_next
-        while True:
-            if _current_next.next:
-                yield _current_next.val
-                _current_next = _current_next.next
-            else:
-                break
+        while _current_next.next:
+            yield _current_next.val
+            _current_next = _current_next.next
+        yield _current_next.val
 
     def __next__(self):
         """链表迭代器先入先出, 可重复迭代"""
@@ -201,3 +206,4 @@ class DoubleLinkedList:
                 break
             current = current.next
         return f"<DoubleLinkedList {node_list}>"
+
