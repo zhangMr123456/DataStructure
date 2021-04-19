@@ -1,3 +1,6 @@
+from Exception import FunctionError
+
+
 class ListNode:
     def __init__(self, val):
         self.val = val
@@ -28,7 +31,6 @@ class SinglyLinkedList:
     """
 
     def __init__(self):
-        self._last_obj = None
         self._first_obj = None
         self._current = None
         self._count = 0
@@ -45,7 +47,6 @@ class SinglyLinkedList:
             self._first_obj = node
             self._current_next = node
         self._current = node
-        self._last_obj = node
         self._count += 1
 
     def pop(self):
@@ -64,7 +65,6 @@ class SinglyLinkedList:
             yield _current_next.val
             _current_next = _current_next.next
         yield _current_next.val
-
 
     def __next__(self):
         """链表迭代器先入先出, 可重复迭代"""
@@ -207,3 +207,40 @@ class DoubleLinkedList:
             current = current.next
         return f"<DoubleLinkedList {node_list}>"
 
+
+class SinglyLinkedCircularList(SinglyLinkedList):
+    """
+    单向循环链表
+    单向循环链表用于需要循环使用的内容
+    """
+    def add(self, x):
+        node = ListNode(x)
+        if self._current:
+            node.next = self._first_obj
+            self._current.next = node
+        else:
+            self._first_obj = node
+            self._current_next = node
+        self._current = node
+        self._count += 1
+
+    def pop(self):
+        if self._first_obj:
+            val = self._first_obj.val
+            self._count -= 1
+            if self._first_obj.next:
+                self._first_obj = self._first_obj.next
+                self._current.next = self._first_obj
+            else:
+                self.__init__()
+            return val
+
+    def get_iter(self):
+        raise AttributeError("方法不存在")
+
+
+class BidirectionalCircularLinkedLists(DoubleLinkedList):
+    """
+    双向循环链表
+    """
+    pass

@@ -1,2 +1,6 @@
-class AddError(IndexError):
+class AddError(Exception):
+    pass
+
+
+class FunctionError(Exception):
     pass
