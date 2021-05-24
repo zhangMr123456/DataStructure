@@ -131,7 +131,7 @@ class DoubleLinkedList:
     def __len__(self):
         return self._count
 
-    def leftadd(self, x):
+    def left_add(self, x):
         node = ListNode(x)
         if self._count:
             node.next = self._first_obj
@@ -144,7 +144,7 @@ class DoubleLinkedList:
             self._current_next = node
         self._count += 1
 
-    def rightadd(self, x):
+    def right_add(self, x):
         node = ListNode(x)
         if self._count:
             node.left = self._last_obj
@@ -156,7 +156,7 @@ class DoubleLinkedList:
             self._current_next = node
         self._count += 1
 
-    def leftpop(self):
+    def left_pop(self):
         if self._first_obj:
             val = self._first_obj.val
             self._count -= 1
@@ -167,7 +167,7 @@ class DoubleLinkedList:
                 self.__init__()
             return val
 
-    def rightpop(self):
+    def right_pop(self):
         if self._last_obj:
             val = self._last_obj.val
             self._count -= 1
@@ -213,6 +213,7 @@ class SinglyLinkedCircularList(SinglyLinkedList):
     单向循环链表
     单向循环链表用于需要循环使用的内容
     """
+
     def add(self, x):
         node = ListNode(x)
         if self._current:
