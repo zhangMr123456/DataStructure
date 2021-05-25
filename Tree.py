@@ -1,4 +1,10 @@
+from util import parameter_calibration
+from typing import List, Dict
+
+
 class TreeNode:
+    """树节点"""
+
     def __init__(self, val):
         self.val, self.left, self.right, self.data = val, None, None, None
 
@@ -50,9 +56,10 @@ class BinaryTree:
         return val_list
 
     @classmethod
-    def build_from(cls, data):
+    def build_from(cls, data: List[Dict[str, object]]) -> object:
         """
         :param data: 数据
+            example: [{'oneself': 'A', 'left': 'B', 'right': 'C', 'is_root': True, "data": {}}, ...]
         :return: 所有节点的值
         """
         node_list, root_node = {}, None
@@ -69,8 +76,32 @@ class BinaryTree:
         return cls(root_node)
 
 
+class SearchTrees:
+    """
+    二叉查找树
+
+    规则:
+        若左子树不空，则左子树上所有结点的值均小于或等于它的根结点的值
+        若右子树不空，则右子树上所有结点的值均大于它的根结点的值
+        左、右子树也分别为二叉排序树
+    """
+    def __init__(self, root):
+        self._root = root
+
+    @classmethod
+    @parameter_calibration
+    def build_from(cls, data: List[int]) -> object:
+        """
+        :param data: 数据
+            example: [1, 2, 3, 4, 5, 6]
+        :return: 搜索树对象
+        """
+        pass
+
+
 if __name__ == '__main__':
     from TestData import NODE_LIST
 
     binary_tree = BinaryTree.build_from(NODE_LIST)
     print(binary_tree.sequence_traversal())
+
