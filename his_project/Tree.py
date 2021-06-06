@@ -1,7 +1,6 @@
 from typing import List, Dict
 from copy import copy
-import heapq
-from util import parameter_calibration, random_number
+from his_project.util import random_number
 
 
 class TreeNode:
@@ -179,35 +178,63 @@ class SearchTrees(BinaryTree):
         return root
 
     def delete(self, value):
+        """
+        :param value:  需要删除的值
+        :return: 返回 root 对象
+
+        删除二叉搜索树的时候分为几种情况:
+
+        - 当左右子树都不存在的情况
+            直接删除
+
+        - 当之后一个子树存在的情况
+            把那一个子树网上移一层,覆盖(等同于删除)掉要删除的节点
+
+        - 当左右节点都存在的情况
+            1. 判断要删除的节点的左右字数谁的节点多,那边节点多找那边替补(用于平衡二叉树)
+            2. 节点多的那边取最大值, 和要删除值进行替换(替换删除的方法,比节点上移的方式操作节点更少,更快)
+            3. 取得的最大值和要删除的节点进行位置替换(替换的作用就是将要删除的节点转化为只有一个子节点(或者没有子节点)的节点进行删除操作)
+            4. 替换完之后删除替换后的(之前要删除的节点),如果这个节点有子树或者无子树都按照前两种情况进行删除了
+        """
         node_list = [self._root]
+
+        def processing_to_delete(current_node):
+            if current_node.left and current_node.right:
+                while current_node.right:
+                    current_node = current_node.right
+
+            elif current_node.left and not current_node.right:
+                current_node = current_node.left
+
+            elif not current_node.left and current_node.right:
+                current_node = current_node.right
+
+            elif not current_node.left and not current_node.right:
+                current_node = None
+            return current_node
+
+        # if self._root.val == value:
+        #     self._root = processing_to_delete(self._root)
+
         while node_list:
             node = node_list.pop(0)
-            if node.val == value:
-                # 当左右都有数据的时候左右数据都可以上,然后一直保持队形往上走
-                if node.left and node.right:
-                    while node.right:
-                        node = node.right
+            if node.left:
+                if node.left.val == value:
+                    node.left = processing_to_delete(node.left)
                     return
-
-                if node.left and not node.right:
-                    node = node.left
+                node_list.append(node.left)
+            if node.right:
+                if node.right.val == value:
+                    node.right = processing_to_delete(node.right)
                     return
-
-                if not node.left and node.right:
-                    node = node.right
-                    return
-
-                if not node.left and not node.right:
-                    node = None
-                    return
-
-            else:
-                if node.left:
-                    node_list.append(node.left)
-                if node.right:
-                    node_list.append(node.right)
-
+                node_list.append(node.right)
 
 if __name__ == '__main__':
-    _data = random_number(is_generator=False, length=5)
+    _data = random_number(is_generator=False, length=100)
+    print("原始:", _data)
     tree = SearchTrees.recursive_build(data=set(_data))
+    print("原始:", tree.sequence_traversal())
+    for item in _data:
+        tree.delete(item)
+        a = tree.sequence_traversal()
+        print(f"删除{item},当前长度{len(a)},当前剩余{a}")

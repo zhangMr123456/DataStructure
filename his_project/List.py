@@ -1,6 +1,3 @@
-from Exception import FunctionError
-
-
 class ListNode:
     def __init__(self, val):
         self.val = val
