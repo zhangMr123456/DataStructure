@@ -426,9 +426,7 @@ class BSTree:
             # 获取最大的子节点
             to_switch = self.get_max(node.left)
             # 将当前要删掉的 node 金额 最大值进行位置调换
-            plot_tree(tree)
             self._switch_nodes(node, to_switch)
-            plot_tree(tree)
             # 当当前值没有左右子的时候
             if not (to_switch.right or to_switch.left):
                 to_delete = self.get_max(node.left)
@@ -453,7 +451,6 @@ class BSTree:
         """
         # 判断是否存在要删除的节点
         print(f"开始删除,删除前要删除的key: {key}")
-        plot_tree(tree)
         node = self.get_node(key, self.Root)
         # 如果存在再进行删除操作
         if node:
@@ -466,7 +463,6 @@ class BSTree:
             # 当左右节点都存在的时候
             else:
                 self._delete_node(node)
-        plot_tree(tree)
 
     def delete_from(self, seq):
         """
@@ -482,10 +478,11 @@ class BSTree:
 
 if __name__ == '__main__':
     import random
-    from pybst.draw import plot_tree
+    from draw import plot_tree
 
-    data = [[random.randint(0, 99999), random.randint(0, 99999)] for item in range(10)]
+    data = [[random.randint(0, 99), random.randint(0, 99)] for item in range(10)]
     tree = BSTree(data)
 
     for key, value in data:
         tree.delete(key)
+        plot_tree(tree)
