@@ -204,13 +204,13 @@ class SearchTrees(BinaryTree):
         """
         node2.key, node1.key, = node1.key, node2.key
         # 判断当值1为root的时候, 处理父级情况
-        if node1.key == self.Root.key:
-            node1.parent = node2.parent
-        # 判断当值2为Root的时候
-        elif node2.key == self.Root.key:
-            node2.parent = node1.parent
-        else:
-            node2.parent, node1.parent = node1.parent, node2.parent
+        # if node1.key == self.Root.key:
+        #     node1.parent = node2.parent
+        # # 判断当值2为Root的时候
+        # elif node2.key == self.Root.key:
+        #     node2.parent = node1.parent
+        # else:
+        #     node2.parent, node1.parent = node1.parent, node2.parent
 
     def get_father_son(self, node):
         """获取父子关系"""
@@ -244,36 +244,45 @@ class SearchTrees(BinaryTree):
         node_list = [self.Root]
 
         def processing_to_delete(current_node):
+            """具体删除逻辑"""
+            # 取出要删除的节点的父节点
             parent_tag, parent = self.get_father_son(current_node)
 
+            # 如果存左右节点都存在的情况
             if current_node.left and current_node.right:
+                # 获取左右元素那个元素多删除那边
                 left_count = self.get_element_count(current_node.left)
                 right_count = self.get_element_count(current_node.right)
+                # 如果左边大于右边, 取左边最大值进行替换,为了保持搜索树特性
                 if left_count >= right_count:
                     largest_element = self.max(current_node.left)
+                # 如果右边数目多,那就取右边最小值进行替换,为了保持搜索树特性
                 else:
                     largest_element = self.min(current_node.right)
-                # 需要替换的值和最大值进行替换
+                # 当前节点的值和最大值进行替换
                 self._switch_nodes(current_node, largest_element)
+                # 删除操作
                 processing_to_delete(largest_element)
                 return current_node
-
+            # 如果要删除的节点存在左节点但是不存在有节点, 就将左节点的值向上移
             elif current_node.left and not current_node.right:
                 current_node = current_node.left
-
+            # 如果要删除的节点存在有节点但是不存在左节点,那就把右节点的值向上移
             elif not current_node.left and current_node.right:
                 current_node = current_node.right
-
+            # 如果被删除的节点左右子树都不存在那就直接清除
             elif not current_node.left and not current_node.right:
                 current_node = None
 
+            # 将父节点对值进行重新绑定
             if parent is not None:
                 # 父和子绑定是双向的所以需要双向重新绑定
                 setattr(parent, parent_tag, current_node)
                 if current_node is not None:
                     current_node.parent = parent
             else:
-                current_node.parent = None
+                if current_node is not None:
+                    current_node.parent = None
             return current_node
 
         # 判断当删除节点为Root的时候
@@ -300,14 +309,10 @@ if __name__ == '__main__':
     删除左子树有右子树的情况出问题
     删除右子树有左子树的情况直接删掉
     """
-    # _data = random_number(is_generator=False, length=10, max_value=100)
-    _data = [6, 46, 17, 24, 26, 29, 79, 63, 86, 89]
+    _data = random_number(is_generator=False, length=100, max_value=100)
     tree = SearchTrees.recursive_build(data=set(_data))
+    print(_data)
     plot_tree(tree)
     for item in _data:
-        if item == 46:
-            print(item)
-        tree.delete(item)
-        plot_tree(tree)
-        # a = tree.sequence_traversal()
-        # print(f"删除{item},当前长度{len(a)},当前剩余{a}")
+        if tree.Root:
+            tree.delete(item)
