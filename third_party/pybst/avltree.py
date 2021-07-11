@@ -18,7 +18,9 @@
 
 import collections
 
+from his_project.util import random_number
 from third_party.pybst import bstree
+from third_party.pybst.draw import plot_tree
 
 Node = bstree.Node
 BSTree = bstree.BSTree
@@ -130,7 +132,7 @@ class AVLTree(BSTree):
         T.levelorder(...) -> Sequence. Produces a sequence of the Nodes
         in T, obtained in levelorder.
         """
-        return BSTree.levelorder(self, *args)
+        return BSTree.levelorder(self)
 
     def get_node(self, key, *args):
         """
@@ -145,7 +147,7 @@ class AVLTree(BSTree):
         a new Node with key attribute key and value attribute
         value into T. Balances if necessary.
         """
-        if not isinstance(key, (int, long, float)):
+        if not isinstance(key, (int, float)):
             raise TypeError(str(key) + " is not a number")
         else:
             if not self.Root:
@@ -488,3 +490,13 @@ class AVLTree(BSTree):
                 self.delete(x)
         else:
             raise TypeError(str(iter) + " is not iterable")
+
+
+if __name__ == '__main__':
+    lis = random_number(length=34000, max_value=999999)
+    avl = AVLTree()
+    for item in lis:
+        avl.insert(item, item)
+    # plot_tree(avl)
+    print(avl.Root.height)
+    # print(avl)

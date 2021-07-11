@@ -1,101 +1,8 @@
-from typing import List, Dict
 from copy import copy
+
+from his_project.BTree import BinaryTree, TreeNode
 from his_project.util import random_number
 from third_party.pybst.draw import plot_tree
-
-
-class TreeNode:
-    """树节点"""
-
-    def __init__(self, key, left=None, right=None, data=None, parent=None):
-        self.key, self.left, self.right, self.data, self.parent = key, left, right, data, parent
-
-
-class BinaryTree:
-    """二叉树"""
-
-    def __init__(self, root):
-        self.Root = root
-        self._temp = None
-
-    def left_sequence_traversal(self):
-        """左序遍历"""
-        val_list, stack = [], [self.Root]
-        while stack:
-            node = stack.pop()
-            while node:
-                val_list.append({node.key: node.data})
-                if node.right:
-                    stack.append(node.right)
-                node = node.left
-        return val_list
-
-    def right_sequence_traversal(self):
-        """右序遍历"""
-        val_list, stack = [], [self.Root]
-        while stack:
-            node = stack.pop()
-            while node:
-                val_list.append({node.key: node.data})
-                if node.left:
-                    stack.append(node.left)
-                node = node.right
-        return val_list
-
-    def in_sequence_traversal(self):
-        """中序遍历"""
-        pass
-
-    def sequence_traversal(self):
-        """层序遍历"""
-        val_list, stack = [], [self.Root]
-        while stack:
-            node = stack.pop()
-            val_list.append({node.key: node.data})
-            if node.left:
-                stack.append(node.left)
-            if node.right:
-                stack.append(node.right)
-        return val_list
-
-    def get_element_count(self, *args):
-        if len(args) == 0:
-            node = self.Root
-        else:
-            node = args[0]
-
-        left = 0
-        right = 0
-
-        if node:
-            if node.left:
-                left = self.get_element_count(node.left)
-            if node.right:
-                right = self.get_element_count(node.right)
-
-            return 1 + left + right
-        else:
-            return 0
-
-    @classmethod
-    def build_from(cls, data: List[Dict[str, object]]) -> object:
-        """
-        :param data: 数据
-            example: [{'oneself': 'A', 'left': 'B', 'right': 'C', 'is_root': True, "data": {}}, ...]
-        :return: 所有节点的值
-        """
-        node_list, root_node = {}, None
-        for node in data:
-            key = node["oneself"]
-            node_list[key] = TreeNode(key=key)
-            node_list[key].data = node["data"]
-        for node in data:
-            key, left, right, root = node["oneself"], node["left"], node["right"], node["is_root"]
-            node_list[key].left = node_list.get(left, None)
-            node_list[key].right = node_list.get(right, None)
-            if root:
-                root_node = node_list[key]
-        return cls(root_node)
 
 
 class SearchTrees(BinaryTree):
@@ -177,10 +84,10 @@ class SearchTrees(BinaryTree):
     @classmethod
     def recursive_build(cls, data: set) -> object:
         data = list(data)
-        value = data.pop(0)
+        value = data.pop()
         root = TreeNode(value)
         while data:
-            value = data.pop(0)
+            value = data.pop()
             root = cls.insert(root=root, key=value, parent=None)
         return cls(root)
 
@@ -203,14 +110,6 @@ class SearchTrees(BinaryTree):
         :return: None
         """
         node2.key, node1.key, = node1.key, node2.key
-        # 判断当值1为root的时候, 处理父级情况
-        # if node1.key == self.Root.key:
-        #     node1.parent = node2.parent
-        # # 判断当值2为Root的时候
-        # elif node2.key == self.Root.key:
-        #     node2.parent = node1.parent
-        # else:
-        #     node2.parent, node1.parent = node1.parent, node2.parent
 
     def get_father_son(self, node):
         """获取父子关系"""
@@ -309,10 +208,11 @@ if __name__ == '__main__':
     删除左子树有右子树的情况出问题
     删除右子树有左子树的情况直接删掉
     """
-    _data = random_number(is_generator=False, length=100, max_value=100)
-    tree = SearchTrees.recursive_build(data=set(_data))
-    print(_data)
+    _data = random_number(is_generator=False, length=10, max_value=100)
+    # _data = {70, 37, 51, 93, 59}
+    tree = SearchTrees.recursive_build(data=_data)
+    # print(_data)
     plot_tree(tree)
-    for item in _data:
-        if tree.Root:
-            tree.delete(item)
+    # for item in _data:
+    #     if tree.Root:
+    #         tree.delete(item)
