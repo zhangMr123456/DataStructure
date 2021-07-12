@@ -493,10 +493,11 @@ class AVLTree(BSTree):
 
 
 if __name__ == '__main__':
-    lis = random_number(length=34000, max_value=999999)
+    lis = random_number(length=20, max_value=100)
+    # lis = [i for i in range(0, 21)]
     avl = AVLTree()
     for item in lis:
         avl.insert(item, item)
-    # plot_tree(avl)
+        plot_tree(avl)
     print(avl.Root.height)
     # print(avl)

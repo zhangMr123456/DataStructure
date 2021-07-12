@@ -104,7 +104,7 @@ class BinaryTree:
         else:
             node = args[0]
         if not node or (node.left is None and node.right is None):
-            return 1
+            return 0
         return 1 + max(self.get_height(node.left), self.get_height(node.right))
 
 
